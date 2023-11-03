@@ -3,7 +3,7 @@ some kind of documentation
 
 ## definitions.h and pluto.ini
 ### Length scales and variables
-In order to add in approximate r-process heating rates, you need to specify physical units. The three relevant ones are
+In order to add in approximate r-process heating rates, one needs to specify physical units. The three relevant ones are
 
 `UNIT_DENSITY` $\rho = 10^8 \text{g }\text{cm}^{-3}$
 
@@ -63,14 +63,25 @@ It's easier (for me) to set up and load the initial data with Python. The way th
 
 1. `set_grid.c` defines the global grid, and writes the grid to `pgrid4py.dat.'
 2. A system call is then made to `initgrid.py` which will write the initial primitives to `pygrid_tot.dat.` This is probably the most important step. See [here](https://github.com/dcarrel/bnsm-disk/blob/main/acc_disk_hydro.pdf) for the details of disk initialization. 
-3. MPI assigns different grid regions to different processesors and so to initialize the generated data, you have to do this subgrid by subgrid. This is done in `startup.c.` Each process does a system call to `initgridn.py.` This generates process-specific grid files `pygrid_nnn.dat` which is written to the initial PLUTO grid.
+3. MPI assigns different grid regions to different processesors and so to initialize the generated data, one has to do this subgrid by subgrid. This is done in `startup.c.` Each process does a system call to `initgridn.py.` This generates process-specific grid files `pygrid_nnn.dat` which is written to the initial PLUTO grid.
 
 ## radiat.c
 
-This is where the 
+This is where the heating rate is implemented. To use a given functional form, one needs to set the cooling rate to `TABULATED` in `definitions.h` and then define `rhs[RHOE]` appropriately (positive for heating). 
 
 ## visc_nu.c
 
+Here, we use Sunyaev-Shakura $\alpha$ viscosity prescription: 
+
+$$\nu = \frac{\alpha P}{\rho r^{3/2}\sqrt{G M_{BH}}}$$
+
+This is set in `visc_nu.c` which requires that `VISCOSITY` be set to `EXPLICIT` in `definitions.h`. In regions where the sounds speed is high (like the ambient medium around the disk), the viscous source terms are very large and cause numerical problems. There are two ways to deal with this
+
+1. Limit the viscous source terms only to regions where the disk is spread. This can be done by using tracers, which are an _almost_ binary parameter that is one in places where the disk has advected to and zero elsewhere.
+2. Explicitly limit viscosity by reducing the source term where it is too large. This is done in `viscous_rhs.c,` and is used in tandem with (1). 
+
 ## viscous_rhs.c
 
-viscon user parameter
+The viscous source is limited via `LIMIT_RHS,` which has not a great selection criteria right now. I will change it and update this.
+
+There is also a user-defined parameter `viscon.` This is set concurrently with (but not by) calls to `LIMIT_RHS` and is `1` where the viscous source is one and `0` where it is off. 
