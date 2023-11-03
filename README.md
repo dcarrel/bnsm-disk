@@ -77,7 +77,7 @@ $$\nu = \frac{\alpha P}{\rho r^{3/2}\sqrt{G M_{BH}}}$$
 
 This is set in `visc_nu.c` which requires that `VISCOSITY` be set to `EXPLICIT` in `definitions.h`. In regions where the sounds speed is high (like the ambient medium around the disk), the viscous source terms are very large and cause numerical problems. There are two ways to deal with this
 
-1. Limit the viscous source terms only to regions where the disk is spread. This can be done by using tracers, which are an _almost_ binary parameter that is one in places where the disk has advected to and zero elsewhere.
+1. Limit the viscous source terms only to regions where the disk is spread. This can be done by using tracers, which are an _almost_ binary parameter that is `1` in places where the disk has advected to and `0` elsewhere.
 2. Explicitly limit viscosity by reducing the source term where it is too large. This is done in `viscous_rhs.c,` and is used in tandem with (1). 
 
 ## viscous_rhs.c
