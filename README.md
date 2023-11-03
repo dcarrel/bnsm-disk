@@ -27,6 +27,8 @@ Probably the most important quantity is the r-process heating rate $q\sim E/(Mt)
 
 `RP_HEATING` $q = 4\times 10^{16}\text{ }t^{-1.3} \text{cgs units} = 0.4\text{ }t^{-1.3}\text{ (code units)}.$
 
+Note that in the above $t$ has to be divided by the appropriate `UNIT_TIME.`
+
 ### User defined parameters
 
 There are currently 7 user defined parameters, and I think all are currently used.
@@ -60,11 +62,12 @@ The mass of the disk is probably set in `initgrid.py` and disn information.
 It's easier (for me) to set up and load the initial data with Python. The way this works is as follows:
 
 1. `set_grid.c` defines the global grid, and writes the grid to `pgrid4py.dat.'
-2. A system call is then made to `initgrid.py` which will write the initial primitives to `pygrid_tot.dat.' This is probably the most important step.  
+2. A system call is then made to `initgrid.py` which will write the initial primitives to `pygrid_tot.dat.` This is probably the most important step. See [here](https://github.com/dcarrel/bnsm-disk/blob/main/acc_disk_hydro.pdf) for the details of disk initialization. 
 3. MPI assigns different grid regions to different processesors and so to initialize the generated data, you have to do this subgrid by subgrid. This is done in `startup.c.` Each process does a system call to `initgridn.py.` This generates process-specific grid files `pygrid_nnn.dat` which is written to the initial PLUTO grid.
 
-
 ## radiat.c
+
+This is where the 
 
 ## visc_nu.c
 
