@@ -7,7 +7,7 @@ import plutotools as pt
 ## for restarting file
 
 restart_dir = "restart"
-restart_file = 1
+restart_file = 0
 
 rc_fname = "pgrid4py.dat" ## coord file to read PREFIX
 d_fname =  "pygrid_tot.dat"    ## file to write PREFIX
