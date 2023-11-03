@@ -55,18 +55,17 @@ The mass of the disk is probably set in `initgrid.py` and disn information.
 
 `UserDefBoundary` Had some issues with mass inflow at the outer radial boundary and inner polar boundary. Imposed no inflow boundary conditions there, which are almost identical to the usual Neumann ones except we set $v_r$ (or $v_\phi$) to zero if they could represent inflow. 
 
-## initgrid.py and initgridn.py
+## main.c/startup.c/ and initgrid.py/initgridn.py
 
-These are used to initialize the grid. I don't know enough C well
+It's easier (for me) to set up and load the initial data with Python. The way this works is as follows:
 
-## main.c
-
+1. `startup.c` runs
 
 
 ## radiat.c
 
-## startup.c
-
 ## visc_nu.c
 
 ## viscous_rhs.c
+
+viscon user parameter
