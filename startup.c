@@ -68,7 +68,7 @@ void Startup (Data *d, Grid *grid)
   #endif
 
   FILE * PLUTO_coords;
-  char cfname[13];
+  char cfname[20];
   char cfname_buf[0x100];
   sprintf(cfname, "pgrid4py_%03d.dat", prank);
   snprintf(cfname_buf, sizeof(cfname_buf), "%s", cfname);
@@ -94,7 +94,7 @@ void Startup (Data *d, Grid *grid)
       primitive variables.
    ------------------------------------------------------ */
   FILE * init_file;
-  char ifname[13];
+  char ifname[20];
   char ifname_buf[0x100];
   sprintf(ifname, "pygrid_%03d.dat",prank);
   snprintf(ifname_buf, sizeof(ifname_buf), "%s", ifname);
