@@ -45,7 +45,7 @@ There are currently 7 user defined parameters, and I think all are currently use
 
 `RHOCRIT` Sets the critical density of the disk where the tracers are initially set.
 
-`EXP_LIM` Sets how large the ratio between the conservative source and conservative variable has to be in order to do the explicit limiting.
+`EXP_LIM` Sets how _small_ (used to be how large) the ratio between the conservative variable and source has to be in order to do the explicit limiting.
 
 The mass of the disk is probably set in `initgrid.py` and disn information. 
 
