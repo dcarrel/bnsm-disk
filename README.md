@@ -41,7 +41,7 @@ There are currently 7 user defined parameters, and I think all are currently use
 
 `ALPHA` Usual $\alpha$ viscosity parameter
 
-`VISCLIM` Whether or not to limit the viscosity is set, according to whatever procedure is set (now done according to a combination of tracers/ad-hoc source limiting which I want to remove). 
+`VISCLIM` Whether or not to limit the viscosity is set, according to whatever procedure is set (now done according to a combination of tracers/ad-hoc source limiting which I want to remove). Don't think this is actually used anymore.
 
 `RHOCRIT` Sets the critical density of the disk where the tracers are initially set.
 
