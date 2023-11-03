@@ -55,11 +55,13 @@ The mass of the disk is probably set in `initgrid.py` and disn information.
 
 `UserDefBoundary` Had some issues with mass inflow at the outer radial boundary and inner polar boundary. Imposed no inflow boundary conditions there, which are almost identical to the usual Neumann ones except we set $v_r$ (or $v_\phi$) to zero if they could represent inflow. 
 
-## main.c/startup.c/ and initgrid.py/initgridn.py
+## set_grid.c/startup.c/ and initgrid.py/initgridn.py
 
 It's easier (for me) to set up and load the initial data with Python. The way this works is as follows:
 
-1. `startup.c` runs
+1. `set_grid.c` defines the global grid, and writes the grid to `pgrid4py.dat.'
+2. A system call is then made to `initgrid.py` which will write the initial primitives to `pygrid_tot.dat.' This is probably the most important step.  
+3. MPI assigns different grid regions to different processesors and so to initialize the generated data, you have to do this subgrid by subgrid. This is done in `startup.c.` Each process does a system call to `initgridn.py.` This generates process-specific grid files `pygrid_nnn.dat` which is written to the initial PLUTO grid.
 
 
 ## radiat.c
