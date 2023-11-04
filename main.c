@@ -46,6 +46,7 @@ static void CheckForOutput (Data *, Runtime *, time_t, Grid *);
 static void CheckForAnalysis (Data *, Runtime *, Grid *);
 
 double g_maxPrim;
+
 /* ********************************************************************* */
 int main (int argc, char *argv[])
 /*!
@@ -160,6 +161,10 @@ int main (int argc, char *argv[])
   if (cmd_line.maxsteps == 0) last_step = 1;
   print ("> Starting computation... \n\n");  
   double ***viscon = GetUserVar("viscon");
+  double ***csrc0  = GetUserVar("csrc0");
+  double ***csrc1  = GetUserVar("csrc1");  
+  double ***csrc2  = GetUserVar("csrc2");
+  double ***csrc3  = GetUserVar("csrc3");
 /* =====================================================================
    1.  M A I N      L O O P      S T A R T S      H E R E
    ===================================================================== */
@@ -210,6 +215,10 @@ int main (int argc, char *argv[])
     // reset viscon
     DOM_LOOP(k,j,i){
       viscon[k][j][i] = 0.0;
+      csrc0[k][j][i] = 0.0;
+      csrc1[k][j][i] = 0.0;
+      csrc2[k][j][i] = 0.0;
+      csrc3[k][j][i] = 0.0;
     }
 
     
