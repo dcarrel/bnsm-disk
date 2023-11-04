@@ -1,4 +1,4 @@
-/* ///////////////////////////////////////////////////////////////////// */
+/* /////8885e-02;//////////////////////////////////////////////////////////////// */
 /*! 
   \file  
   \brief Build the right hand side for the viscosity operator
@@ -39,6 +39,10 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
   int i, j, k, nv;
   double rhs_tmp;
   double ***viscon = GetUserVar("viscon");
+  double ***csrc0  = GetUserVar("csrc0");
+  double ***csrc1  = GetUserVar("csrc1");
+  double ***csrc2  = GetUserVar("csrc2");
+  double ***csrc3  = GetUserVar("csrc3");
   double *x1  = grid->x[IDIR],   *x2 = grid->x[JDIR],   *x3  = grid->x[KDIR];
   double *dx1 = grid->dx[IDIR], *dx2 = grid->dx[JDIR], *dx3  = grid->dx[KDIR];
   double *x1p = grid->xr[IDIR], *x2p = grid->xr[JDIR],  *x3p = grid->xr[KDIR];
@@ -121,7 +125,19 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
       FOR_EACH(nv, &var_list){
         rhs_tmp = dtdV*(fxA[i][nv] - fxA[i-1][nv]) + dt*src[i][nv];
 	LimitRHS(i,j,k,nv,rhs_tmp,d);
-	rhs[nv] = g_rhslim * rhs_tmp; //dtdV*(fxA[i][nv] - fxA[i-1][nv])*g_rhslim + dt*src[i][nv];
+	switch(nv){
+	case 1: csrc1[k][j][i] += fabs(rhs_tmp);
+	  break;
+	case 2: csrc2[k][j][i] += fabs(rhs_tmp);
+	  break;
+	case 3: csrc3[k][j][i] += fabs(rhs_tmp);
+	  break;
+	default: csrc0[k][j][i] += fabs(rhs_tmp);
+	  
+	}
+
+	rhs[nv] = g_rhslim * rhs_tmp; //dtd*(fxA[i][nv] - fxA[i-1][nv])*g_rhslim + dt*src[i][nv];
+	
 	dcoeff[i]  *= g_rhslim;
 	if (i == beg){
 	  dcoeff[i-1] *= g_rhslim;
@@ -199,6 +215,16 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
       FOR_EACH(nv, &var_list){
         rhs_tmp = dtdV*(fxA[j][nv] - fxA[j-1][nv]) + dt*src[j][nv];
 	LimitRHS(i,j,k,nv,rhs_tmp,d);
+	switch(nv){
+	case 1: csrc1[k][j][i] += fabs(rhs_tmp);
+	  break;
+	case 2: csrc2[k][j][i] += fabs(rhs_tmp);
+	  break;
+	case 3: csrc3[k][j][i] += fabs(rhs_tmp);
+	  break;
+	default: csrc0[k][j][i] += fabs(rhs_tmp);
+	  
+	}
 	rhs[nv] = g_rhslim*rhs_tmp;//dtdV*(fxA[j][nv] - fxA[j-1][nv])*g_rhslim + dt*src[j][nv];
 	dcoeff[j] *= g_rhslim;
 	if (j==beg){
@@ -266,6 +292,17 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
       FOR_EACH(nv, &var_list){
         rhs_tmp = dtdV*(fxA[k][nv] - fxA[k-1][nv]) + dt*src[k][nv];
 	LimitRHS(i,j,k,nv,rhs_tmp,d);
+	switch(nv){
+	case 1: csrc1[k][j][i] += fabs(rhs_tmp);
+	  break;
+	case 2: csrc2[k][j][i] += fabs(rhs_tmp);
+	  break;
+	case 3: csrc3[k][j][i] += fabs(rhs_tmp);
+	  break;
+	default: csrc0[k][j][i] += fabs(rhs_tmp);
+	  
+	}
+
 	rhs[nv] = g_rhslim*rhs_tmp;// dtdV*(fxA[k][nv] - fxA[k-1][nv])*g_rhslim + dt*src[k][nv];
 	dcoeff[k] *= g_rhslim;// *= g_rhslim;
 	if(k==beg){
@@ -320,4 +357,6 @@ void LimitRHS(int i, int j, int k, int nv, double rhs, const Data *d){
     g_rhslim = 1.0;
   }
 }
+
+
 
