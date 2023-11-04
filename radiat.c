@@ -114,7 +114,7 @@ void Radiat (double *v, double *rhs)
    ---------------------------------------------- */
   
   //probably only want this inside of the accretion disk
-  if(g_time > g_inputParam[TSTART]) //change later (v[RHO] > INIT_RHOCRIT)
+  if(g_time > g_inputParam[TSTART] && g_inputParam[ESRC]) //change later (v[RHO] > INIT_RHOCRIT)
   {
     double rhoep;
     rhoep = 0.4 *v[TRC]*v[RHO]* pow( (g_time+10)/UNIT_TIME, -1.3);

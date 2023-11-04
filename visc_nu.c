@@ -20,7 +20,7 @@ void Visc_nu(double *v, double x1, double x2, double x3,
 {
 //  printf("Visocisty called\n");
   if(g_time > g_inputParam[TSTART]){//v[RHO] > 1.e-4){
-    *nu1 = g_inputParam[ALPHA] * v[PRS] * pow(x1, 1.5)/v[RHO]/sqrt(g_inputParam[MBH]*CONST_G);
+    *nu1 = g_inputParam[ALPHA] * v[TRC]* v[PRS] * pow(x1, 1.5)/v[RHO]/sqrt(g_inputParam[MBH]*CONST_G);
   }
   else{
     *nu1 = 0.0;

@@ -24,7 +24,7 @@
 #define  NGAM                           1
 #define  TSTART                         2
 #define  ALPHA                          3
-#define  VISCLIM                        4
+#define  ESRC                           4
 #define  RHOCRIT                        5
 #define  EXP_LIM                        6
 
@@ -35,6 +35,6 @@
 #define  UNIT_VELOCITY                  1.e8
 #define  SHOCK_FLATTENING               MULTID
 #define  FAILSAFE                       YES
-#define  EPS_SHOCK_FLATTENING           2.5
+#define  EPS_SHOCK_FLATTENING           1.0
 
 /* [End] user-defined constants (do not change this line) */

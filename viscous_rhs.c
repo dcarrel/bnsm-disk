@@ -313,7 +313,7 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
 double rhs_ratio;
 void LimitRHS(int i, int j, int k, int nv, double rhs, const Data *d){
   rhs_ratio = fabs( d->Uc[k][j][i][nv]/(rhs + 1.e-10) );
-  if( rhs_ratio > g_inputParam[EXP_LIM] ){
+  if( rhs_ratio < g_inputParam[EXP_LIM] ){
     g_rhslim = 0.0;
   }
   else{

@@ -1,16 +1,14 @@
 import numpy as np
 from scipy.integrate import dblquad
-import glob
-import sys
 import plutotools as pt
 
 ## for restarting file
 
-restart_dir = "restart"
-restart_file = 0
+RESTART_DIR = "restart"
+RESTART_FILE = 0
 
-rc_fname = "pgrid4py.dat" ## coord file to read PREFIX
-d_fname =  "pygrid_tot.dat"    ## file to write PREFIX
+RC_FNAME = "pgrid4py.dat" ## coord file to read PREFIX
+D_FNAME =  "pygrid_tot.dat"    ## file to write PREFIX
 
 MIN_RHO, FORCE_GEQ, MIN_PRS = 0,1,2
 MIN_RHO_SHOCKPRS            = 4
@@ -37,7 +35,7 @@ MBH  = 2.e5     # mass of central object
 MDISK= 2.e3     # total mass of disk
 RDISK= 5       # radius of disk in units that we use
 DIST = 1.04    # distortion parameter
-RHOCRIT = 1.e-8 # minimum density as a fraction of maximum density
+RHOCRIT = 1.e-4 # minimum density as a fraction of maximum density
 RHOCRIT_VISC = 1.e-1 ## same but for viscosity limiting
 PRSCRIT = 1.e-8
 GAMMA = 1 + 1/NGAM
@@ -59,7 +57,7 @@ SPECAM     = np.sqrt(GRAV_CONST*MBH*RDISK)
 ## need to do some stuff for parallelization 
 #####################################################################
 
-f = open(rc_fname, "r")
+f = open(RC_FNAME, "r")
 rcs = np.sort(np.fromstring(f.readline(), sep="\t"))
 thcs= np.sort(np.fromstring(f.readline(), sep="\t"))
 f.close()
@@ -80,9 +78,9 @@ cgrid = np.zeros((NRCS, NTHCS, 7))
 ###
 ####################################################################################################
 
-if restart_file:
+if RESTART_FILE:
     print("Using restart file")
-    sim = pt.Simulation(restart_dir)
+    sim = pt.Simulation(RESTART_DIR)
     rgr  = np.outer(rcs, np.ones(NTHCS) )
     thgr = np.outer(np.ones(NRCS), thcs)
     rhogr, prsgr, vx1gr, vx2gr, vx3gr = sim.gen_interpolate(rcs, thcs, nghosts=3)
@@ -225,84 +223,6 @@ else:
     num_mass *= 2*np.pi *2 #do the polar integral
     print(f"total mass fraction in grid is {num_mass/MDISK}")
 
-    ####################################################################################################
-    ###
-    ### Sets up the ambient medium
-    ###
-    ####################################################################################################
-
-    ## For the MIN_PRS AND MIN_RHO cases, we want pressures that have gradients ~GM*rho/r
-
-    ## Find boundaries at each value of theta
-
-    if INIT_METHOD == FORCE_GEQ:
-
-        ## evolve from right boundary
-        ## evolve from left boundary
-        rb_index = -np.ones( (NTHCS, 2) )*np.inf
-        for j, th in enumerate(thcs):
-            for i, r in enumerate(rcs):
-                if cgrid[i,j,RHO] == rho_crit:
-                    if i == NRCS - 1 or i == 0:
-                        continue
-                    if cgrid[i+1,j,RHO]>rho_crit:
-                        rb_index[j][0]=i
-                    elif cgrid[i-1,j,RHO]>rho_crit:
-                        rb_index[j][1]=i
-        for j, th in enumerate(thcs):
-            if rb_index[j][0] < 0 or rb_index[j][1] < 0:
-                ## this means that there is not; set inner bou
-                continue
-
-
-            ## compute from left boundary
-            rcl = rcs[:lindex][::-1]
-            for i, r in enumerate(rcl):
-                ieff = lindex - i -1
-                rplus = cgrid[ieff+1,j,X1]
-                dr = rplus - r
-                rho = cgrid[ieff, j, RHO]
-
-                gradph = (phi(rplus)-phi(r))/dr
-                centf  = cgrid[ieff+1,j,VX3]**2/rplus*np.sin(th)
-                dp = rho*dr*(centf-gradph)
-
-                cgrid[ieff,j,PRS] = cgrid[ieff+1,j,PRS]-dp
-
-            ## compute from right boundary
-            rcr = rcs[rindex+1:]
-            for i, r in enumerate(rcr):
-                ieff = rindex+1+i
-                if ieff == NRCS-1:
-                    continue
-                rminus = cgrid[ieff-1,j,X1]
-                dr =  r - rminus
-
-                rho = cgrid[ieff-1,j,RHO]
-
-                gradph = (phi(r)-phi(rminus))/dr
-                centf  = cgrid[ieff-1,j,VX3]**2/rplus*np.sin(th)
-                dp = rho*dr*(centf-gradph)
-
-                cgrid[ieff,j,PRS] = cgrid[ieff-1,j,PRS]+dp
-
-        plboundary = GRAV_CONST*MBH*rho_crit/rcs[0]
-        cgrid[:,:,PRS] += plboundary
-
-        for j, th in enumerate(thcs):
-            if rb_index[j][0] < 0 or rb_index[j][1] < 0:
-                for i, r in enumerate(rcs):
-                    rho = cgrid[i,j,RHO]
-                    cgrid[i,j,PRS] = GRAV_CONST*MBH*rho/r
-
-        cgrid[-1,:,PRS] = cgrid[-2,:,PRS]
-
-    ## check if there are any negative pressures or densities
-    print("minimum density", np.min(cgrid[:,:,RHO]))
-    print("minimum pressure", np.min(cgrid[:,:,PRS]))
-
-##the pressure gradients around the boundary are sometimes very big. 
-
 ####################################################################################################
 ###
 ### Writes to file
@@ -310,16 +230,9 @@ else:
 ####################################################################################################
 
 
-#########################################
-###
-### need to make pinit files for each process
-###
-###########################################
-
-
 ## input PCOORD for process -> output cgrid for pcoords
 def write_cgrid():
-    f   = open(d_fname, "w")
+    f   = open(D_FNAME, "w")
     ## print r and theta coordiantes to the file
     for i,r in enumerate(rcs):
         f.write(f"{r}\t")
@@ -334,7 +247,7 @@ def write_cgrid():
            rho,prs,vx1,vx2,vx3 = cgrid[i,j,2:]
            f.write(f"{rho:5.5e}\t{prs:5.5e}\t{vx1:5.5e}\t{vx2:5.5e}\t{vx3:5.5e}\n")
     f.close()
-    print(f"Wrote file {d_fname}")
+    print(f"Wrote file {D_FNAME}")
 
 ####################################################################################################
 ##
@@ -343,25 +256,3 @@ def write_cgrid():
 ####################################################################################################
 
 write_cgrid()
-
-####################################################################################################
-##
-## Need to change the pluto.ini rhocrit parameter for viscous limiting
-##
-####################################################################################################
-
-if False:
-    ini_filer = open("pluto_template.ini", "r")
-    lines = ini_filer.readlines()
-    ini_filer.close()
-
-    rhocrit_visc = RHOCRIT_VISC * rho_max
-
-    for i,line in enumerate(lines):
-        if line.split(" ")[0] == "RHOCRIT":
-            print(f"WRITING RHOCRIT_VISC: {rhocrit_visc:5.5e}")
-            lines[i] = f"RHOCRIT\t\t\t{rhocrit_visc:5.5e}"
-
-            ini_filew = open("pluto.ini", "w")
-            ini_filew.writelines(lines)
-            ini_filew.close()
