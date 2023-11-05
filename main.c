@@ -159,8 +159,8 @@ int main (int argc, char *argv[])
   }
 
   if (cmd_line.maxsteps == 0) last_step = 1;
-  print ("> Starting computation... \n\n");  
-  double ***viscon = GetUserVar("viscon");
+  print ("> Starting computation... \n\n");
+  double ***tvisc  = GetUserVar("tvisc");
   double ***csrc0  = GetUserVar("csrc0");
   double ***csrc1  = GetUserVar("csrc1");  
   double ***csrc2  = GetUserVar("csrc2");
@@ -212,9 +212,9 @@ int main (int argc, char *argv[])
          g_dt = dt(n). After this step U^n -> U^{n+1}
      ---------------------------------------------------- */
 
-    // reset viscon
+    // reset user defined parameters viscon
     DOM_LOOP(k,j,i){
-      viscon[k][j][i] = 0.0;
+      tvisc[k][j][i] = 0.0;
       csrc0[k][j][i] = 0.0;
       csrc1[k][j][i] = 0.0;
       csrc2[k][j][i] = 0.0;

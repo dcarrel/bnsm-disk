@@ -38,7 +38,6 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
   double ***vo3 = GetUserVar("vo3");*/
   int i, j, k, nv;
   double rhs_tmp;
-  double ***viscon = GetUserVar("viscon");
   double ***csrc0  = GetUserVar("csrc0");
   double ***csrc1  = GetUserVar("csrc1");
   double ***csrc2  = GetUserVar("csrc2");
@@ -142,9 +141,6 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
 	if (i == beg){
 	  dcoeff[i-1] *= g_rhslim;
 	}
-	if(!viscon[k][j][i]){
-	  viscon[k][j][i] = g_rhslim;
-	}
       }
       #ifdef iMPHI
       rhs[iMPHI] /= fabs(x1[i]);
@@ -230,9 +226,6 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
 	if (j==beg){
 	  dcoeff[j-1] *= g_rhslim;
 	}
-	if(!viscon[k][j][i]){
-	  viscon[k][j][i] = g_rhslim;
-	}
       }
 
       #if (GEOMETRY == SPHERICAL)
@@ -307,9 +300,6 @@ void ViscousRHS (const Data *d, Data_Arr dU, double *dcoeff,
 	dcoeff[k] *= g_rhslim;// *= g_rhslim;
 	if(k==beg){
 	  dcoeff[k-1] *= g_rhslim;
-	}
-	if(!viscon[k][j][i]){
-	  viscon[k][j][i] = g_rhslim;
 	}
       }  
 
