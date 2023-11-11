@@ -397,7 +397,7 @@ double ParabolicRHS (const Data *d, Data_Arr dU, RBox *domBox, double **aflux,
             double inv_dl2 = inv_dl[i]*inv_dl[i];
             C_dtp[VISC_OP][k][j][i] += 0.5*(dcoeff[i-1] + dcoeff[i])*inv_dl2;
             invDt_par     = dcoeff[i]*inv_dl2;
-	    if (tvisc[k][j][i] < invDt_par) tvisc[k][j][i] = invDt_par;
+	    if (tstep[k][j][i] < invDt_par) tstep[k][j][i] = invDt_par;
             max_invDt_par = MAX(max_invDt_par, invDt_par);
           }  
         }  
@@ -476,7 +476,7 @@ double ParabolicRHS (const Data *d, Data_Arr dU, RBox *domBox, double **aflux,
             double inv_dl2 = inv_dl[j]*inv_dl[j];
             C_dtp[VISC_OP][k][j][i] += 0.5*(dcoeff[j-1] + dcoeff[j])*inv_dl2;
             invDt_par     = dcoeff[j]*inv_dl2;
-	    if (tvisc[k][j][i] < invDt_par) tvisc[k][j][i] = invDt_par;
+	    if (tstep[k][j][i] < invDt_par) tstep[k][j][i] = invDt_par;
 	    max_invDt_par = MAX(max_invDt_par, invDt_par);
           }  
         }  
@@ -554,7 +554,7 @@ double ParabolicRHS (const Data *d, Data_Arr dU, RBox *domBox, double **aflux,
             double inv_dl2 = inv_dl[k]*inv_dl[k];
             C_dtp[VISC_OP][k][j][i] += 0.5*(dcoeff[k-1] + dcoeff[k])*inv_dl2;
             invDt_par     = dcoeff[k]*inv_dl2;
-	    if (tvisc[k][j][i] < invDt_par) tvisc[k][j][i] = invDt_par;
+	    if (tstep[k][j][i] < invDt_par) tstep[k][j][i] = invDt_par;
 	    max_invDt_par = MAX(max_invDt_par, invDt_par);
           }  
         }  

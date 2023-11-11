@@ -160,7 +160,7 @@ int main (int argc, char *argv[])
 
   if (cmd_line.maxsteps == 0) last_step = 1;
   print ("> Starting computation... \n\n");
-  double ***tvisc  = GetUserVar("tvisc");
+  double ***tvisc  = GetUserVar("tstep");
   double ***csrc0  = GetUserVar("csrc0");
   double ***csrc1  = GetUserVar("csrc1");  
   double ***csrc2  = GetUserVar("csrc2");
