@@ -1,5 +1,5 @@
 import numpy as np
-import sys
+import sys, os
 
 prank = sys.argv[1] ##need to supply rank of process
 
@@ -45,6 +45,7 @@ nthcs = np.fromstring(ngfile.readline(),sep="\t")
 nNRCS = len(nrcs)
 nNTHCS = len(nthcs)
 ngfile.close()
+os.remove(ngrid_fname)
 print(f"Subgrid: RCOORDS({nNRCS})  = [{nrcs[0]},{nrcs[-1]}]",
                    f"THCOORDS({nNTHCS}) = [{nthcs[0]},{nthcs[-1]}]")
 

@@ -35,6 +35,6 @@
 #define  UNIT_VELOCITY                  1.e8
 #define  SHOCK_FLATTENING               MULTID
 #define  FAILSAFE                       YES
-#define  EPS_SHOCK_FLATTENING           1.0
+#define  EPS_PSHOCK_FLATTEN             5.0
 
 /* [End] user-defined constants (do not change this line) */

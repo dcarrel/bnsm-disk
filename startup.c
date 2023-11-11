@@ -213,7 +213,8 @@ void Startup (Data *d, Grid *grid)
     #endif
   }}}
   fclose(init_file);
-
+  snprintf(ifname_buf, sizeof(ifname_buf), "rm %s", ifname);
+  system(ifname_buf);
 /* --------------------------------------------------------
    2. Call Init_Domain() to assign primitive variables
       by looping over computational cells.

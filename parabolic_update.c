@@ -245,7 +245,7 @@ double ParabolicRHS (const Data *d, Data_Arr dU, RBox *domBox, double **aflux,
   double  scrh;
   double  max_invDt_par = 0.0, invDt_par;
   static  double ***C_dtp[MAX_OP], *dcoeff, **dcoeff_res;
-  double ***tvisc = GetUserVar("tvisc");
+  double ***tstep = GetUserVar("tstep");
   
 /* --------------------------------------------------------
    0. Allocate storage memory for sweep structure,

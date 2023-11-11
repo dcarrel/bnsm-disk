@@ -117,7 +117,7 @@ void Radiat (double *v, double *rhs)
   if(g_time > g_inputParam[TSTART] && g_inputParam[ESRC]) //change later (v[RHO] > INIT_RHOCRIT)
   {
     double rhoep;
-    rhoep = 0.4 *v[TRC]*v[RHO]* pow( (g_time+10)/UNIT_TIME, -1.3);
+    rhoep = 0.4 *v[TRC]*v[RHO]* pow( (g_time+10-g_inputParam[TSTART])/UNIT_TIME, -1.3);
 //    printf("rproc/rhoe: %5.5e\n", rhoep/v[RHOE]);
     rhs[RHOE] = rhoep; //mass*rproc
   }
